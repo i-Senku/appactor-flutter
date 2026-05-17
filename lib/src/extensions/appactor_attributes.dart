@@ -7,13 +7,22 @@ import '../internal/method_names.dart';
 import '../models/attributes.dart';
 
 extension AppActorAttributes on AppActor {
-  Future<void> setAttributes(Map<String, Object> attributes) async {
+  /// Sets developer-defined custom attributes for the current AppActor user.
+  ///
+  /// Custom attributes are separate from AppActor system profile context,
+  /// integration identifiers, and attribution helpers. Use the dedicated
+  /// profile, identifier, or attribution APIs for those reserved contexts.
+  Future<void> setAttributes(Map<String, Object?> attributes) async {
     await AppActorPlatform.execute(MethodNames.setAttributes, {
       'attributes': _normalizeAttributes(attributes),
     });
   }
 
-  Future<void> setAttribute(String key, Object value) async {
+  /// Sets one developer-defined custom attribute.
+  ///
+  /// Passing `null` is rejected so removals stay explicit through
+  /// [unsetAttribute].
+  Future<void> setAttribute(String key, Object? value) async {
     _validateCustomKey(key);
     await AppActorPlatform.execute(MethodNames.setAttribute, {
       'key': key,
@@ -26,17 +35,20 @@ extension AppActorAttributes on AppActor {
     await AppActorPlatform.execute(MethodNames.unsetAttribute, {'key': key});
   }
 
+  /// Sets the reserved email profile attribute. Passing `null` clears it.
   Future<void> setEmail(String? email) async {
     if (email != null) _validateEmail(email);
     await AppActorPlatform.execute(MethodNames.setEmail, {'email': email});
   }
 
+  /// Sets the reserved display-name profile attribute. Passing `null` clears it.
   Future<void> setDisplayName(String? displayName) async {
     await AppActorPlatform.execute(MethodNames.setDisplayName, {
       'display_name': displayName,
     });
   }
 
+  /// Sets the reserved phone-number profile attribute. Passing `null` clears it.
   Future<void> setPhoneNumber(String? phoneNumber) async {
     if (phoneNumber != null) _validatePhoneNumber(phoneNumber);
     await AppActorPlatform.execute(MethodNames.setPhoneNumber, {
@@ -44,16 +56,29 @@ extension AppActorAttributes on AppActor {
     });
   }
 
+  /// Sets the reserved push-token profile attribute. Passing `null` clears it.
   Future<void> setPushToken(String? pushToken) async {
     await AppActorPlatform.execute(MethodNames.setPushToken, {
       'push_token': pushToken,
     });
   }
 
+  /// Collects native SDK/device profile context through the platform SDK.
+  ///
+  /// Native iOS/Android route supported fields such as SDK version, app
+  /// version, platform, device model, bundle/package ID, locale, timezone, and
+  /// storefront country through AppActor's reserved profile context. The
+  /// backend projects the hot subset into `profile_current`; these fields are
+  /// intentionally not developer custom attributes.
   Future<void> collectDeviceIdentifiers() async {
     await AppActorPlatform.execute(MethodNames.collectDeviceIdentifiers);
   }
 
+  /// Stores a reserved integration identifier such as AppsFlyer, Adjust, or
+  /// Firebase App Instance ID.
+  ///
+  /// Integration identifiers are not custom attributes and are not attribution
+  /// campaign fields.
   Future<void> setIntegrationIdentifier(
     AppActorIntegrationIdentifier type,
     String value,
@@ -61,12 +86,32 @@ extension AppActorAttributes on AppActor {
     await setCustomIntegrationIdentifier(type.wireValue, value);
   }
 
+  /// Clears a reserved integration identifier.
+  Future<void> unsetIntegrationIdentifier(
+    AppActorIntegrationIdentifier type,
+  ) async {
+    await unsetCustomIntegrationIdentifier(type.wireValue);
+  }
+
+  /// Stores a custom integration identifier type.
+  ///
+  /// Use this for provider-specific user/device IDs. Use [updateAttribution] or
+  /// the attribution convenience helpers for acquisition/campaign context.
   Future<void> setCustomIntegrationIdentifier(String type, String value) async {
     _validateIntegrationIdentifierType(type);
     _validateIntegrationIdentifierValue(value);
     await AppActorPlatform.execute(MethodNames.setIntegrationIdentifier, {
       'type': type,
       'value': value,
+    });
+  }
+
+  /// Clears a custom integration identifier type.
+  Future<void> unsetCustomIntegrationIdentifier(String type) async {
+    _validateIntegrationIdentifierType(type);
+    await AppActorPlatform.execute(MethodNames.setIntegrationIdentifier, {
+      'type': type,
+      'value': null,
     });
   }
 
@@ -99,6 +144,10 @@ extension AppActorAttributes on AppActor {
     oneSignalID,
   );
 
+  /// Updates acquisition attribution through the native attribution route.
+  ///
+  /// This is intentionally separate from custom attributes and integration
+  /// identifiers.
   Future<void> updateAttribution(AppActorAttribution attribution) async {
     final payload = attribution.toJson();
     rememberCustomAttributionSnapshot(attribution);
@@ -166,6 +215,13 @@ void _validateCustomKey(String key) {
       key,
       'key',
       'Custom attribute keys cannot start with "appactor.".',
+    );
+  }
+  if (key.toLowerCase().startsWith('integration.')) {
+    throw ArgumentError.value(
+      key,
+      'key',
+      'Integration identifiers must use setIntegrationIdentifier().',
     );
   }
 }
@@ -310,7 +366,7 @@ Object _normalizeAttributeValue(Object? value, {String name = 'value'}) {
   );
 }
 
-Map<String, Object> _normalizeAttributes(Map<String, Object> attributes) {
+Map<String, Object> _normalizeAttributes(Map<String, Object?> attributes) {
   return attributes.map((key, value) {
     _validateCustomKey(key);
     return MapEntry(

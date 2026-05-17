@@ -100,6 +100,38 @@ void main() {
   );
 
   test(
+    'DateTime and bool-list values keep backend-compatible envelopes',
+    () async {
+      await AppActor.instance.setAttribute(
+        'last_seen',
+        DateTime.parse('2026-05-16T15:00:00+03:00'),
+      );
+      await AppActor.instance.setAttribute(
+        'created_at',
+        AppActorAttributeValue.dateTime(DateTime.utc(2026, 5, 16, 12, 30)),
+      );
+      await AppActor.instance.setAttribute(
+        'flags',
+        const AppActorAttributeValue.boolList([true, false, true]),
+      );
+
+      final payloads = executePayloadsFor('set_attribute');
+      expect(payloads[0], {
+        'key': 'last_seen',
+        'value': {'value': '2026-05-16T12:00:00.000Z', 'valueType': 'date'},
+      });
+      expect(payloads[1], {
+        'key': 'created_at',
+        'value': {'value': '2026-05-16T12:30:00.000Z', 'valueType': 'date'},
+      });
+      expect(payloads[2], {
+        'key': 'flags',
+        'value': [true, false, true],
+      });
+    },
+  );
+
+  test(
     'single attribute APIs use custom key validation and expected payloads',
     () async {
       await AppActor.instance.setAttribute('tier', 'gold');
@@ -113,6 +145,18 @@ void main() {
       expect(executePayloadFor('unset_attribute'), {'key': 'legacy_tier'});
     },
   );
+
+  test('custom attributes reject nullable values before native call', () async {
+    expect(
+      AppActor.instance.setAttribute('nickname', null),
+      throwsA(isA<ArgumentError>()),
+    );
+    expect(
+      AppActor.instance.setAttributes({'nickname': null}),
+      throwsA(isA<ArgumentError>()),
+    );
+    expect(recordedCalls, isEmpty);
+  });
 
   test('profile and device helpers use native bridge methods', () async {
     await AppActor.instance.setEmail('user@example.com');
@@ -206,6 +250,27 @@ void main() {
         throwsA(isA<ArgumentError>()),
       );
       expect(recordedCalls, isEmpty);
+    },
+  );
+
+  test(
+    'integration identifiers can be cleared through the native bridge',
+    () async {
+      await AppActor.instance.unsetIntegrationIdentifier(
+        AppActorIntegrationIdentifier.adjustId,
+      );
+      await AppActor.instance.unsetCustomIntegrationIdentifier(
+        'kochava_device_id',
+      );
+
+      expect(wireMethods(), [
+        'set_integration_identifier',
+        'set_integration_identifier',
+      ]);
+      expect(executePayloadsFor('set_integration_identifier'), [
+        {'type': 'adjust_adid', 'value': null},
+        {'type': 'kochava_device_id', 'value': null},
+      ]);
     },
   );
 
@@ -340,6 +405,10 @@ void main() {
     );
     expect(
       AppActor.instance.setAttribute('appactor.source', 'x'),
+      throwsA(isA<ArgumentError>()),
+    );
+    expect(
+      AppActor.instance.setAttribute('integration.adjust_id', 'x'),
       throwsA(isA<ArgumentError>()),
     );
     expect(

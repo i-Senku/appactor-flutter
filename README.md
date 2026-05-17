@@ -56,6 +56,8 @@ final isPremium = info.hasActiveEntitlement('premium');
 await AppActor.instance.setAttributes({
   'favorite_category': 'watch_faces',
   'signup_source': const AppActorAttributeValue.string('spring_campaign'),
+  'last_seen': AppActorAttributeValue.dateTime(DateTime.now()),
+  'feature_flags': const AppActorAttributeValue.boolList([true, false]),
 });
 
 await AppActor.instance.setEmail('user@example.com');
@@ -69,6 +71,26 @@ await AppActor.instance.setAdjustID('adjust-user-123');
 await AppActor.instance.setMediaSource('facebook');
 await AppActor.instance.setCampaign('spring_sale');
 ```
+
+`setAttribute()` and `setAttributes()` are for developer-defined custom
+attributes only. Custom keys cannot use `$`, `appactor.`, or `integration.`
+reserved prefixes. `DateTime` values are sent as a typed date envelope, boolean
+arrays are supported, and `null` values are rejected; call
+`unsetAttribute(key)` to remove a custom attribute.
+
+Profile helpers such as `setEmail()`, `setDisplayName()`, `setPhoneNumber()`,
+`setPushToken()`, and `collectDeviceIdentifiers()` use native reserved profile
+routes. Native iOS/Android send SDK/device context such as platform, app
+version, SDK version, device model, bundle/package ID, locale, timezone, and
+storefront country through AppActor's system profile path; the backend projects
+the hot subset into `profile_current` instead of treating it as developer custom
+attributes.
+
+Integration identifiers and attribution are separate surfaces. Use
+`setIntegrationIdentifier()` / provider helpers for external user or device IDs,
+and use `updateAttribution()` / `setMediaSource()` / `setCampaign()` /
+`setAdGroup()` / `setAd()` / `setKeyword()` / `setCreative()` for campaign
+context.
 
 ## Purchase Sync
 
@@ -93,6 +115,8 @@ final drained = await AppActor.instance.drainReceiptQueueAndRefreshCustomer();
 - iOS-only APIs such as `presentOfferCodeRedeemSheet()`, `getAsaDiagnostics()`, and `purchaseFromIntent()` throw `UnsupportedError` on non-iOS platforms.
 
 ## Documentation
+
+- [Customer attributes and profile context](docs/customer-attributes.md)
 
 Visit [appactor.com/docs](https://appactor.com/docs) for full documentation.
 
