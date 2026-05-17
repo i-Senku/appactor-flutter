@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import '../appactor.dart';
 import '../appactor_platform.dart';
+import '../internal/attribute_key_policy.dart';
 import '../internal/attribution_helper_state.dart';
 import '../internal/method_names.dart';
 import '../models/attributes.dart';
@@ -222,6 +223,13 @@ void _validateCustomKey(String key) {
       key,
       'key',
       'Integration identifiers must use setIntegrationIdentifier().',
+    );
+  }
+  if (isLegacyProfileCurrentAlias(key)) {
+    throw ArgumentError.value(
+      key,
+      'key',
+      'Profile context fields are reserved. Use collectProfileContext() or a reserved helper instead.',
     );
   }
 }

@@ -391,6 +391,15 @@ void main() {
       ),
       throwsA(isA<ArgumentError>()),
     );
+    expect(
+      AppActor.instance.updateAttribution(
+        const AppActorAttribution(
+          provider: AppActorAttributionProvider.custom,
+          metadata: {'integration.adjust_id': 'x'},
+        ),
+      ),
+      throwsA(isA<ArgumentError>()),
+    );
     expect(recordedCalls, isEmpty);
   });
 
@@ -409,6 +418,18 @@ void main() {
     );
     expect(
       AppActor.instance.setAttribute('integration.adjust_id', 'x'),
+      throwsA(isA<ArgumentError>()),
+    );
+    expect(
+      AppActor.instance.setAttribute('appVersion', 'x'),
+      throwsA(isA<ArgumentError>()),
+    );
+    expect(
+      AppActor.instance.setAttribute('platform', 'x'),
+      throwsA(isA<ArgumentError>()),
+    );
+    expect(
+      AppActor.instance.setAttribute('userCountry', 'x'),
       throwsA(isA<ArgumentError>()),
     );
     expect(

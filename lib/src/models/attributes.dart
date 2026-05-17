@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
+import '../internal/attribute_key_policy.dart';
+
 @immutable
 class AppActorAttributeValue {
   final Object? value;
@@ -323,6 +325,20 @@ String _validateMetadataKey(String key) {
       key,
       'key',
       'Custom attribute keys cannot start with "appactor.".',
+    );
+  }
+  if (key.toLowerCase().startsWith('integration.')) {
+    throw ArgumentError.value(
+      key,
+      'key',
+      'Integration identifiers must use setIntegrationIdentifier().',
+    );
+  }
+  if (isLegacyProfileCurrentAlias(key)) {
+    throw ArgumentError.value(
+      key,
+      'key',
+      'Profile context fields are reserved. Use collectProfileContext() or a reserved helper instead.',
     );
   }
   return key;
