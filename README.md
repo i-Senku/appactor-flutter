@@ -116,7 +116,7 @@ final drained = await AppActor.instance.drainReceiptQueueAndRefreshCustomer();
 
 ## Documentation
 
-- [Customer attributes and profile context](docs/customer-attributes.md)
+- [Customer attributes and profile context](doc/customer-attributes.md)
 
 Visit [appactor.com/docs](https://appactor.com/docs) for full documentation.
 
