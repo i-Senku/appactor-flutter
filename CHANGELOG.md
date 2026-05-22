@@ -1,3 +1,9 @@
+## 0.0.12
+
+- Updated native SDK dependencies to Android `2.3.3` and iOS `0.1.4` for attribution helper null-clear parity and Android quantity validation.
+- Added Flutter-side purchase quantity validation for values below `1` while keeping native platforms responsible for supported quantity limits.
+- Documented Android's current quantity limit and expanded attribution helper null-clear coverage.
+
 ## 0.0.11
 
 - Updated native SDK dependencies to Android `2.3.2` and iOS `0.1.3` for polished customer attributes, integration identifiers, attribution helpers, and typed date payload parity.
