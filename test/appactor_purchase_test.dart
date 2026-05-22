@@ -118,6 +118,31 @@ void main() {
     },
   );
 
+  test('purchasePackage serializes max length placement', () async {
+    const package = AppActorPackage(id: 'monthly', productId: 'pro_monthly');
+    final placement = 'x' * 255;
+
+    await AppActor.instance.purchasePackage(package, placement: placement);
+
+    expect(wireMethods(), ['purchase_package']);
+    expect(executePayloadFor('purchase_package'), {
+      'package_id': 'monthly',
+      'placement': placement,
+    });
+  });
+
+  test(
+    'purchasePackage omits overlong placement from the native payload',
+    () async {
+      const package = AppActorPackage(id: 'monthly', productId: 'pro_monthly');
+
+      await AppActor.instance.purchasePackage(package, placement: 'x' * 256);
+
+      expect(wireMethods(), ['purchase_package']);
+      expect(executePayloadFor('purchase_package'), {'package_id': 'monthly'});
+    },
+  );
+
   test(
     'purchasePackage rejects invalid quantity before native dispatch',
     () async {
