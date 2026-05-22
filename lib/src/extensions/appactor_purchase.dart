@@ -13,6 +13,7 @@ extension AppActorPurchase on AppActor {
     String? oldPurchaseToken,
     AppActorSubscriptionReplacementMode? replacementMode,
     int? quantity,
+    String? placement,
   }) async {
     if (quantity != null && quantity < 1) {
       throw ArgumentError.value(
@@ -22,6 +23,7 @@ extension AppActorPurchase on AppActor {
       );
     }
     final effectiveOfferingId = offeringId ?? package.offeringId;
+    final effectivePlacement = placement?.trim();
     final result = await AppActorPlatform.execute(MethodNames.purchasePackage, {
       'package_id': package.id,
       if (effectiveOfferingId != null) 'offering_id': effectiveOfferingId,
@@ -29,6 +31,8 @@ extension AppActorPurchase on AppActor {
       if (replacementMode != null)
         'replacement_mode': replacementMode.wireValue,
       if (quantity != null) 'quantity': quantity,
+      if (effectivePlacement != null && effectivePlacement.isNotEmpty)
+        'placement': effectivePlacement,
     });
     return AppActorPurchaseResult.fromJson(result);
   }
