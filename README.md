@@ -44,6 +44,8 @@ final offerings = await AppActor.instance.getOfferings();
 final result = await AppActor.instance.purchasePackage(
   offerings.current!.monthly!,
 );
+// Optional quantity must be at least 1. Android supports only quantity 1;
+// higher quantities are rejected by the native bridge.
 
 // Check entitlements
 final info = await AppActor.instance.getCustomerInfo();
