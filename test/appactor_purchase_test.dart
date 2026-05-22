@@ -17,6 +17,10 @@ void main() {
     final args = Map<String, dynamic>.from(call.arguments as Map);
     final method = args['method'] as String;
     switch (method) {
+      case 'purchase_package':
+        return jsonEncode({
+          'success': {'status': 'success'},
+        });
       case 'sync_purchases':
       case 'quiet_sync_purchases':
       case 'drain_receipt_queue_and_refresh_customer':
@@ -38,6 +42,13 @@ void main() {
         .toList();
   }
 
+  Map<String, dynamic> executePayloadFor(String method) {
+    final args = recordedCalls
+        .map((call) => Map<String, dynamic>.from(call.arguments as Map))
+        .firstWhere((entry) => entry['method'] == method);
+    return jsonDecode(args['json'] as String) as Map<String, dynamic>;
+  }
+
   setUp(() {
     recordedCalls.clear();
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
@@ -56,6 +67,43 @@ void main() {
     expect(info.activeEntitlementKeys, {'premium'});
     expect(wireMethods(), ['sync_purchases']);
   });
+
+  test(
+    'purchasePackage serializes quantity on the native wire contract',
+    () async {
+      const package = AppActorPackage(
+        id: 'monthly',
+        productId: 'pro_monthly',
+        offeringId: 'default',
+      );
+
+      final result = await AppActor.instance.purchasePackage(
+        package,
+        quantity: 3,
+      );
+
+      expect(result.status, AppActorPurchaseStatus.purchased);
+      expect(wireMethods(), ['purchase_package']);
+      expect(executePayloadFor('purchase_package'), {
+        'package_id': 'monthly',
+        'offering_id': 'default',
+        'quantity': 3,
+      });
+    },
+  );
+
+  test(
+    'purchasePackage rejects invalid quantity before native dispatch',
+    () async {
+      const package = AppActorPackage(id: 'monthly', productId: 'pro_monthly');
+
+      expect(
+        () => AppActor.instance.purchasePackage(package, quantity: 0),
+        throwsArgumentError,
+      );
+      expect(recordedCalls, isEmpty);
+    },
+  );
 
   test('quietSyncPurchases uses the quiet sync wire method', () async {
     final info = await AppActor.instance.quietSyncPurchases();

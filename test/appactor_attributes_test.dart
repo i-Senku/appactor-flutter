@@ -363,6 +363,30 @@ void main() {
     expect(executePayloadFor('set_campaign'), {'value': 'spring_sale'});
   });
 
+  test('attribution helper methods serialize explicit null clears', () async {
+    await AppActor.instance.setMediaSource(null);
+    await AppActor.instance.setCampaign(null);
+    await AppActor.instance.setAdGroup(null);
+    await AppActor.instance.setAd(null);
+    await AppActor.instance.setKeyword(null);
+    await AppActor.instance.setCreative(null);
+
+    expect(wireMethods(), [
+      'set_media_source',
+      'set_campaign',
+      'set_ad_group',
+      'set_ad',
+      'set_keyword',
+      'set_creative',
+    ]);
+    expect(executePayloadFor('set_media_source'), {'value': null});
+    expect(executePayloadFor('set_campaign'), {'value': null});
+    expect(executePayloadFor('set_ad_group'), {'value': null});
+    expect(executePayloadFor('set_ad'), {'value': null});
+    expect(executePayloadFor('set_keyword'), {'value': null});
+    expect(executePayloadFor('set_creative'), {'value': null});
+  });
+
   test('attribution canonical fields and metadata keys validate', () async {
     expect(
       AppActor.instance.updateAttribution(

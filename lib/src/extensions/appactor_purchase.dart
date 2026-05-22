@@ -14,6 +14,13 @@ extension AppActorPurchase on AppActor {
     AppActorSubscriptionReplacementMode? replacementMode,
     int? quantity,
   }) async {
+    if (quantity != null && quantity < 1) {
+      throw ArgumentError.value(
+        quantity,
+        'quantity',
+        'Purchase quantity must be at least 1.',
+      );
+    }
     final effectiveOfferingId = offeringId ?? package.offeringId;
     final result = await AppActorPlatform.execute(MethodNames.purchasePackage, {
       'package_id': package.id,

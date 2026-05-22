@@ -84,7 +84,9 @@ await AppActor.instance.updateAttribution(
 
 await AppActor.instance.setMediaSource('facebook');
 await AppActor.instance.setCampaign('spring_sale');
+await AppActor.instance.setCampaign(null);
 ```
 
 Attribution helpers delegate to the native merge state so partial helper calls
-stay aligned with iOS and Android.
+stay aligned with iOS and Android. Passing `null` to an attribution convenience
+helper clears that helper field through the native attribution route.

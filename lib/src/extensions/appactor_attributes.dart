@@ -155,31 +155,31 @@ extension AppActorAttributes on AppActor {
     await AppActorPlatform.execute(MethodNames.updateAttribution, payload);
   }
 
-  Future<void> setMediaSource(String mediaSource) async {
+  Future<void> setMediaSource(String? mediaSource) async {
     await AppActorPlatform.execute(MethodNames.setMediaSource, {
       'value': mediaSource,
     });
   }
 
-  Future<void> setCampaign(String campaign) async {
+  Future<void> setCampaign(String? campaign) async {
     await AppActorPlatform.execute(MethodNames.setCampaign, {
       'value': campaign,
     });
   }
 
-  Future<void> setAdGroup(String adGroup) async {
+  Future<void> setAdGroup(String? adGroup) async {
     await AppActorPlatform.execute(MethodNames.setAdGroup, {'value': adGroup});
   }
 
-  Future<void> setAd(String ad) async {
+  Future<void> setAd(String? ad) async {
     await AppActorPlatform.execute(MethodNames.setAd, {'value': ad});
   }
 
-  Future<void> setKeyword(String keyword) async {
+  Future<void> setKeyword(String? keyword) async {
     await AppActorPlatform.execute(MethodNames.setKeyword, {'value': keyword});
   }
 
-  Future<void> setCreative(String creative) async {
+  Future<void> setCreative(String? creative) async {
     await AppActorPlatform.execute(MethodNames.setCreative, {
       'value': creative,
     });

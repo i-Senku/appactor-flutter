@@ -70,6 +70,7 @@ await AppActor.instance.setAdjustID('adjust-user-123');
 
 await AppActor.instance.setMediaSource('facebook');
 await AppActor.instance.setCampaign('spring_sale');
+await AppActor.instance.setCampaign(null); // Clear a helper field.
 ```
 
 `setAttribute()` and `setAttributes()` are for developer-defined custom
@@ -90,7 +91,8 @@ Integration identifiers and attribution are separate surfaces. Use
 `setIntegrationIdentifier()` / provider helpers for external user or device IDs,
 and use `updateAttribution()` / `setMediaSource()` / `setCampaign()` /
 `setAdGroup()` / `setAd()` / `setKeyword()` / `setCreative()` for campaign
-context.
+context. Passing `null` to an attribution convenience helper clears that helper
+field through the native attribution route.
 
 ## Purchase Sync
 
