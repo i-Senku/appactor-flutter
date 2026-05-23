@@ -84,12 +84,11 @@ arrays are supported, and `null` values are rejected; call
 `unsetAttribute(key)` to remove a custom attribute.
 
 Profile helpers such as `setEmail()`, `setDisplayName()`, `setPhoneNumber()`,
-`setPushToken()`, and `collectDeviceIdentifiers()` use native reserved profile
-routes. Native iOS/Android send SDK/device context such as platform, app
-version, SDK version, device model, bundle/package ID, locale, timezone, and
-storefront country through AppActor's system profile path; the backend projects
-the hot subset into `profile_current` instead of treating it as developer custom
-attributes.
+and `setPushToken()` use native reserved profile routes. Native iOS/Android
+automatically send privacy-safe SDK/device context during `configure()`, such
+as platform, app version, SDK version, device model, bundle/package ID, locale,
+and timezone. `collectDeviceIdentifiers()` remains opt-in for additional
+identifiers.
 
 Integration identifiers and attribution are separate surfaces. Use
 `setIntegrationIdentifier()` / provider helpers for external user or device IDs,

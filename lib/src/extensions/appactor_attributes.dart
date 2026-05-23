@@ -64,13 +64,11 @@ extension AppActorAttributes on AppActor {
     });
   }
 
-  /// Collects native SDK/device profile context through the platform SDK.
+  /// Collects optional native device identifiers through the platform SDK.
   ///
-  /// Native iOS/Android route supported fields such as SDK version, app
-  /// version, platform, device model, bundle/package ID, locale, timezone, and
-  /// storefront country through AppActor's reserved profile context. The
-  /// backend projects the hot subset into `profile_current`; these fields are
-  /// intentionally not developer custom attributes.
+  /// Privacy-safe profile context such as SDK version, app version, platform,
+  /// device model, bundle/package ID, locale, and timezone is sent
+  /// automatically during [configure]. Identifier collection stays opt-in.
   Future<void> collectDeviceIdentifiers() async {
     await AppActorPlatform.execute(MethodNames.collectDeviceIdentifiers);
   }
@@ -229,7 +227,7 @@ void _validateCustomKey(String key) {
     throw ArgumentError.value(
       key,
       'key',
-      'Profile context fields are reserved. Use collectProfileContext() or a reserved helper instead.',
+      'Profile context fields are reserved for AppActor automatic profile context. Use a reserved helper instead.',
     );
   }
 }

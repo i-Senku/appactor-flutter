@@ -338,7 +338,7 @@ String _validateMetadataKey(String key) {
     throw ArgumentError.value(
       key,
       'key',
-      'Profile context fields are reserved. Use collectProfileContext() or a reserved helper instead.',
+      'Profile context fields are reserved for AppActor automatic profile context. Use a reserved helper instead.',
     );
   }
   return key;

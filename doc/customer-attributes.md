@@ -33,22 +33,22 @@ string/number/boolean arrays. Date values are encoded as:
 
 ## Reserved Profile Helpers
 
-Use the profile helper methods for AppActor-owned profile context:
+Use the profile helper methods for AppActor-owned profile fields:
 
 ```dart
 await AppActor.instance.setEmail('user@example.com');
 await AppActor.instance.setDisplayName('Ada Lovelace');
 await AppActor.instance.setPhoneNumber('+15551234567');
 await AppActor.instance.setPushToken('push-token');
-await AppActor.instance.collectDeviceIdentifiers();
 ```
 
 Passing `null` to the nullable profile helpers clears that reserved profile
-field. `collectDeviceIdentifiers()` delegates to native iOS/Android so each
-platform can send supported SDK/device context. The backend partitions hot
-system fields such as platform, app version, SDK version, OS version, device
-model, bundle/package ID, locale, timezone, and storefront country into
-`profile_current`; they are not developer custom attributes.
+field. Native iOS/Android automatically send privacy-safe SDK/device context
+during `configure()`, including platform, app version, SDK version, OS version,
+device model, bundle/package ID, locale, and timezone. The backend partitions
+hot system fields into `profile_current`; they are not developer custom
+attributes. `collectDeviceIdentifiers()` remains opt-in for additional native
+identifiers.
 
 ## Integration Identifiers
 
