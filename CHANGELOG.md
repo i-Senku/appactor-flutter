@@ -1,7 +1,8 @@
-## Unreleased
+## 0.0.15
 
 - Documented that native iOS/Android SDKs now automatically sync privacy-safe profile context during `configure()`.
 - Clarified that `collectDeviceIdentifiers()` remains the explicit opt-in path for additional native identifiers.
+- Updated native SDK dependencies to Android `2.3.6` and iOS `0.1.7`.
 
 ## 0.0.14
 
