@@ -1,5 +1,5 @@
 group = "com.appactor.appactor_flutter"
-version = "0.0.12"
+version = "0.0.13"
 
 buildscript {
     val kotlinVersion = "2.2.20"
