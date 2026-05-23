@@ -69,7 +69,7 @@ void main() {
   });
 
   test(
-    'purchasePackage serializes quantity on the native wire contract',
+    'purchasePackage serializes quantity and placement on the native wire contract',
     () async {
       const package = AppActorPackage(
         id: 'monthly',
@@ -80,6 +80,7 @@ void main() {
       final result = await AppActor.instance.purchasePackage(
         package,
         quantity: 3,
+        placement: '  onboarding_paywall  ',
       );
 
       expect(result.status, AppActorPurchaseStatus.purchased);
@@ -88,7 +89,57 @@ void main() {
         'package_id': 'monthly',
         'offering_id': 'default',
         'quantity': 3,
+        'placement': 'onboarding_paywall',
       });
+    },
+  );
+
+  test(
+    'purchasePackage omits null placement from the native payload',
+    () async {
+      const package = AppActorPackage(id: 'monthly', productId: 'pro_monthly');
+
+      await AppActor.instance.purchasePackage(package, placement: null);
+
+      expect(wireMethods(), ['purchase_package']);
+      expect(executePayloadFor('purchase_package'), {'package_id': 'monthly'});
+    },
+  );
+
+  test(
+    'purchasePackage omits blank placement from the native payload',
+    () async {
+      const package = AppActorPackage(id: 'monthly', productId: 'pro_monthly');
+
+      await AppActor.instance.purchasePackage(package, placement: '   ');
+
+      expect(wireMethods(), ['purchase_package']);
+      expect(executePayloadFor('purchase_package'), {'package_id': 'monthly'});
+    },
+  );
+
+  test('purchasePackage serializes max length placement', () async {
+    const package = AppActorPackage(id: 'monthly', productId: 'pro_monthly');
+    final placement = 'x' * 255;
+
+    await AppActor.instance.purchasePackage(package, placement: placement);
+
+    expect(wireMethods(), ['purchase_package']);
+    expect(executePayloadFor('purchase_package'), {
+      'package_id': 'monthly',
+      'placement': placement,
+    });
+  });
+
+  test(
+    'purchasePackage omits overlong placement from the native payload',
+    () async {
+      const package = AppActorPackage(id: 'monthly', productId: 'pro_monthly');
+
+      await AppActor.instance.purchasePackage(package, placement: 'x' * 256);
+
+      expect(wireMethods(), ['purchase_package']);
+      expect(executePayloadFor('purchase_package'), {'package_id': 'monthly'});
     },
   );
 

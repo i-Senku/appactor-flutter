@@ -21,7 +21,7 @@ AppActor handles in-app purchases, subscriptions, and entitlements so you can fo
 
 ```yaml
 dependencies:
-  appactor_flutter: ^0.0.12
+  appactor_flutter: ^0.0.13
 ```
 
 ## Quick Start
@@ -43,9 +43,11 @@ final offerings = await AppActor.instance.getOfferings();
 // Make a purchase
 final result = await AppActor.instance.purchasePackage(
   offerings.current!.monthly!,
+  placement: 'onboarding_paywall',
 );
 // Optional quantity must be at least 1. Android supports only quantity 1;
 // higher quantities are rejected by the native bridge.
+// Optional placement is omitted when null or blank.
 
 // Check entitlements
 final info = await AppActor.instance.getCustomerInfo();

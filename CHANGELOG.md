@@ -1,3 +1,8 @@
+## 0.0.13
+
+- Added optional Flutter purchase placement forwarding for `purchasePackage`; null or blank placements are omitted from the native payload.
+- Updated native SDK dependencies to Android `2.3.4` and iOS `0.1.5` for purchase placement support.
+
 ## 0.0.12
 
 - Updated native SDK dependencies to Android `2.3.3` and iOS `0.1.4` for attribution helper null-clear parity and Android quantity validation.

@@ -6,6 +6,14 @@ import '../models/enums.dart';
 import '../models/offerings.dart';
 import '../models/purchase_result.dart';
 
+String? _normalizePlacement(String? placement) {
+  final normalized = placement?.trim();
+  if (normalized == null || normalized.isEmpty || normalized.length > 255) {
+    return null;
+  }
+  return normalized;
+}
+
 extension AppActorPurchase on AppActor {
   Future<AppActorPurchaseResult> purchasePackage(
     AppActorPackage package, {
@@ -13,6 +21,7 @@ extension AppActorPurchase on AppActor {
     String? oldPurchaseToken,
     AppActorSubscriptionReplacementMode? replacementMode,
     int? quantity,
+    String? placement,
   }) async {
     if (quantity != null && quantity < 1) {
       throw ArgumentError.value(
@@ -22,6 +31,7 @@ extension AppActorPurchase on AppActor {
       );
     }
     final effectiveOfferingId = offeringId ?? package.offeringId;
+    final effectivePlacement = _normalizePlacement(placement);
     final result = await AppActorPlatform.execute(MethodNames.purchasePackage, {
       'package_id': package.id,
       if (effectiveOfferingId != null) 'offering_id': effectiveOfferingId,
@@ -29,6 +39,7 @@ extension AppActorPurchase on AppActor {
       if (replacementMode != null)
         'replacement_mode': replacementMode.wireValue,
       if (quantity != null) 'quantity': quantity,
+      if (effectivePlacement != null) 'placement': effectivePlacement,
     });
     return AppActorPurchaseResult.fromJson(result);
   }
