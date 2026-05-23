@@ -21,7 +21,7 @@ AppActor handles in-app purchases, subscriptions, and entitlements so you can fo
 
 ```yaml
 dependencies:
-  appactor_flutter: ^0.0.13
+  appactor_flutter: ^0.0.14
 ```
 
 ## Quick Start
@@ -101,11 +101,10 @@ field through the native attribution route.
 ## Purchase Sync
 
 ```dart
-// Current native sync behavior:
-// drains the receipt queue, then refreshes customer info.
+// Quiet store sync without draining the local receipt queue.
 final refreshed = await AppActor.instance.syncPurchases();
 
-// Lightweight sync without draining the receipt queue.
+// Deprecated alias for syncPurchases().
 final quiet = await AppActor.instance.quietSyncPurchases();
 
 // Explicit queue-drain API exposed by the native plugins.

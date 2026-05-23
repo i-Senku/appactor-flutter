@@ -1,3 +1,8 @@
+## 0.0.14
+
+- Updated native SDK dependencies to Android `2.3.5` and iOS `0.1.6` for quiet `syncPurchases` parity and app-open renewal coalescing.
+- Documented `syncPurchases()` as the quiet sync API while keeping `drainReceiptQueueAndRefreshCustomer()` as the explicit queue-drain API.
+
 ## 0.0.13
 
 - Added optional Flutter purchase placement forwarding for `purchasePackage`; null or blank placements are omitted from the native payload.
