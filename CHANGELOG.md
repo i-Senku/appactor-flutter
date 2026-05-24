@@ -1,3 +1,7 @@
+## 0.0.16
+
+- Updated native SDK dependencies to Android `2.3.7` and iOS `0.1.8` for profile context identity-transition hardening.
+
 ## 0.0.15
 
 - Documented that native iOS/Android SDKs now automatically sync privacy-safe profile context during `configure()`.
