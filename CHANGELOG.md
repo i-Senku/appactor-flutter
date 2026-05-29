@@ -1,3 +1,7 @@
+## 0.0.17
+
+- Updated native SDK dependencies to Android `2.3.8` and iOS `0.1.9` for Apple renewal coalescing cleanup hardening and current Android publication metadata.
+
 ## 0.0.16
 
 - Updated native SDK dependencies to Android `2.3.7` and iOS `0.1.8` for profile context identity-transition hardening.
