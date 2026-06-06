@@ -40,11 +40,11 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   AppActor: 51bef18478850c5c3c5e96f0db1e305974fcecee
-  appactor_flutter: be2aaa30c79003334a061b2c9bdf5f382c9cacb6
+  appactor_flutter: 7567f91aec669abdee6fa69ca88e72ec80f09f5f
   AppActorPlugin: c6010c1f39fcfc42f72296d809fe86ae2107524a
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
 
-PODFILE CHECKSUM: f5e3b5e09655eccce8e25429d2cfe7f31ce2aa65
+PODFILE CHECKSUM: eadb6865e9fa3d54272a5b4543d076441631e3ad
 
 COCOAPODS: 1.16.2

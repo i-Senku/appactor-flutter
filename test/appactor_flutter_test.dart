@@ -885,16 +885,9 @@ void main() {
       expect(info.cancellationReason, isNull);
     });
 
-    test('Package toPurchaseParams uses wireValue', () {
-      const pkg = AppActorPackage(
-        id: 'p1',
-        productId: 'com.app.monthly',
-        productType: AppActorProductType.subscription,
-        store: AppActorStore.appStore,
-      );
-      final params = pkg.toPurchaseParams();
-      expect(params['product_type'], 'subscription');
-      expect(params['store'], 'app_store');
+    test('Product type and store expose snake_case wireValue', () {
+      expect(AppActorProductType.subscription.wireValue, 'subscription');
+      expect(AppActorStore.appStore.wireValue, 'app_store');
     });
 
     test('Package fromJson parses cross-platform packageType', () {

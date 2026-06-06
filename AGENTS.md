@@ -64,8 +64,8 @@ All models are `@immutable` with manual `fromJson()` factory constructors (no co
 
 ### Native Implementations
 
-- **iOS** (`ios/Classes/AppActorFlutterPlugin.swift`): Swift 5.9+, min iOS 15.0, delegates to `AppActorPlugin`, uses `AppActorPluginDelegate` protocol for events. Dependency declared via CocoaPods (`AppActorPlugin`, `0.1.2`), resolved from the iOS SDK git repo.
-- **Android** (`android/src/main/kotlin/.../AppActorFlutterPlugin.kt`): Kotlin 2.2.20, minSdk 24, compileSdk 36, JVM target Java 11. Implements `FlutterPlugin` + `ActivityAware`. Dependency: `com.appactor:appactor-plugin:2.3.2`, hosted on Maven Central — no additional authentication required.
+- **iOS** (`ios/Classes/AppActorFlutterPlugin.swift`): Swift 5.9+, min iOS 15.1, delegates to `AppActorPlugin`, uses `AppActorPluginDelegate` protocol for events. Dependency declared via CocoaPods (`AppActorPlugin`, `0.1.8`), resolved from the iOS SDK git repo.
+- **Android** (`android/src/main/kotlin/.../AppActorFlutterPlugin.kt`): Kotlin 2.2.20, minSdk 24, compileSdk 36, JVM target Java 11. Implements `FlutterPlugin` + `ActivityAware`. Dependency: `com.appactor:appactor-plugin:2.3.7`, hosted on Maven Central — no additional authentication required.
 
 ### Public API Export
 
@@ -85,7 +85,7 @@ All models are `@immutable` with manual `fromJson()` factory constructors (no co
 - **Version sync required**: `lib/src/sdk_version.dart` (`appActorSdkVersion`) must match `pubspec.yaml` version. Both must be updated on version bumps.
 - **Purchase status wire translation**: Native sends `"success"` but Dart enum is `AppActorPurchaseStatus.purchased` — explicit mapping exists in `fromString()`.
 - **Search Ads tracking order**: `enableSearchAdsTracking()` must be called BEFORE `configure()`. It is iOS-only but enforced at the Dart level with no platform guard.
-- **`toPurchaseParams()` over `toJson()`**: `AppActorPackage.toJson()` is deprecated; use `toPurchaseParams()` for purchase serialization.
+- **Purchase payload is built from `package_id`**: `purchasePackage` (`lib/src/extensions/appactor_purchase.dart`) sends only `package_id` plus optional `offering_id`/`old_purchase_token`/`replacement_mode`/`quantity`/`placement`. The native AppActorPlugin SDK resolves `product_id`/`store`/`base_plan_id`/`offer_id` server-side from the package id, so `AppActorPackage` has no purchase-serialization method.
 - **iOS-only methods throw, not no-op**: Methods in `appactor_ios.dart` (ASA diagnostics, offer code sheet, purchaseFromIntent) throw `UnsupportedError` on non-iOS platforms — they are not silent no-ops.
 
 ## Test Strategy

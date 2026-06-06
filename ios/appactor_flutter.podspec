@@ -15,7 +15,7 @@ AppActor Flutter plugin wrapping the native AppActorPlugin SDK for iOS.
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.platform = :ios, '15.0'
+  s.platform = :ios, '15.1'
 
   s.dependency 'AppActorPlugin', '0.1.8'
 
