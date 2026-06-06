@@ -204,20 +204,6 @@ class AppActorPackage {
     this.offeringId,
   });
 
-  Map<String, dynamic> toPurchaseParams() => {
-    'package_id': id,
-    if (storeProductId != null) 'store_product_id': storeProductId,
-    'product_id': productId,
-    'product_type': productType.wireValue,
-    'store': store.wireValue,
-    if (basePlanId != null) 'base_plan_id': basePlanId,
-    if (offerId != null) 'offer_id': offerId,
-    if (offeringId != null) 'offering_id': offeringId,
-  };
-
-  @Deprecated('Use toPurchaseParams() instead')
-  Map<String, dynamic> toJson() => toPurchaseParams();
-
   factory AppActorPackage.fromJson(Map<String, dynamic> json) {
     return AppActorPackage(
       id: json['id'] as String? ?? '',

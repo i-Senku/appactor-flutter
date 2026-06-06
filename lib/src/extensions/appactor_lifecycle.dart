@@ -1,7 +1,7 @@
 import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart'
-    show TargetPlatform, defaultTargetPlatform;
+    show TargetPlatform, debugPrint, defaultTargetPlatform;
 
 import '../appactor.dart';
 import '../appactor_platform.dart';
@@ -49,10 +49,20 @@ extension AppActorLifecycle on AppActor {
 
     if (_searchAdsOptions != null &&
         defaultTargetPlatform == TargetPlatform.iOS) {
-      await AppActorPlatform.execute(
-        MethodNames.enableAppleSearchAdsTracking,
-        _searchAdsOptions!.toJson(),
-      );
+      // Apple Search Ads tracking is an optional attribution side-effect.
+      // The core native configure above already succeeded, so a failure here
+      // must not reject configure() and make callers treat the SDK as
+      // un-configured. Swallow and log instead.
+      try {
+        await AppActorPlatform.execute(
+          MethodNames.enableAppleSearchAdsTracking,
+          _searchAdsOptions!.toJson(),
+        );
+      } catch (e, st) {
+        debugPrint(
+          'AppActor: failed to enable Apple Search Ads tracking: $e\n$st',
+        );
+      }
     }
   }
 

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:appactor_flutter/appactor_flutter.dart';
@@ -12,6 +13,7 @@ void main() {
 
   const channel = MethodChannel('appactor_flutter');
   final recordedCalls = <MethodCall>[];
+  var failAsaEnable = false;
 
   Future<dynamic> handleCall(MethodCall call) async {
     recordedCalls.add(call);
@@ -20,8 +22,14 @@ void main() {
     final args = Map<String, dynamic>.from(call.arguments as Map);
     final method = args['method'] as String;
     switch (method) {
-      case 'configure':
       case 'enable_apple_search_ads_tracking':
+        if (failAsaEnable) {
+          return jsonEncode({
+            'error': {'code': 2000, 'message': 'ASA enable failed'},
+          });
+        }
+        return jsonEncode({'success': null});
+      case 'configure':
       case 'reset':
         return jsonEncode({'success': null});
       default:
@@ -43,8 +51,23 @@ void main() {
     return jsonDecode(args['json'] as String) as Map<String, dynamic>;
   }
 
+  Future<void> emitNativeEvent(String name, Map<String, dynamic> payload) async {
+    final messenger =
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+    final completion = Completer<void>();
+    messenger.handlePlatformMessage(
+      channel.name,
+      channel.codec.encodeMethodCall(
+        MethodCall('event', {'name': name, 'json': jsonEncode(payload)}),
+      ),
+      (_) => completion.complete(),
+    );
+    await completion.future;
+  }
+
   setUp(() async {
     recordedCalls.clear();
+    failAsaEnable = false;
     debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, handleCall);
@@ -109,6 +132,24 @@ void main() {
   );
 
   test(
+    'configure completes successfully even when the ASA enable call fails',
+    () async {
+      failAsaEnable = true;
+      AppActor.instance.enableSearchAdsTracking();
+
+      // The core native configure succeeded; an optional ASA-enable failure
+      // must not reject configure() and make callers treat the SDK as
+      // un-configured.
+      await expectLater(
+        AppActor.instance.configure('pk_test_123'),
+        completes,
+      );
+
+      expect(wireMethods(), ['configure', 'enable_apple_search_ads_tracking']);
+    },
+  );
+
+  test(
     'configure does not enable ASA when Flutter target platform is not iOS',
     () async {
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
@@ -129,6 +170,30 @@ void main() {
     final configurePayload = executePayloadFor('configure');
     expect(configurePayload['app_user_id'], 'user_flutter_123');
   });
+
+  test(
+    'configure re-registers customer info events after reset in the same isolate',
+    () async {
+      final delivered = Completer<AppActorCustomerInfo>();
+      final subscription = AppActor.instance.onCustomerInfoUpdated.listen((
+        info,
+      ) {
+        if (!delivered.isCompleted) {
+          delivered.complete(info);
+        }
+      });
+
+      await AppActor.instance.configure('pk_test_123');
+      await AppActor.instance.reset();
+      await AppActor.instance.configure('pk_test_123');
+      await emitNativeEvent('customer_info_updated', {
+        'app_user_id': 'user_flutter_reset',
+      });
+
+      expect((await delivered.future).appUserId, 'user_flutter_reset');
+      await subscription.cancel();
+    },
+  );
 
   test('configure selects the iOS key from AppActorPlatformKeys', () async {
     await AppActor.instance.configure(

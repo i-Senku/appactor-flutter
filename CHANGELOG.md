@@ -1,3 +1,12 @@
+# Changelog
+
+## 0.0.18
+
+- **Breaking:** removed `AppActorPackage.toPurchaseParams()` and its deprecated `toJson()` alias. The purchase wire payload is built from `package_id` (plus optional `offering_id` / `old_purchase_token` / `replacement_mode` / `quantity` / `placement`); the native SDK resolves `product_id` / `store` / `base_plan_id` / `offer_id` server-side. (audit finding flutter-9)
+- Fixed: a failed optional Apple Search Ads enable inside `configure()` no longer rejects the `configure()` Future after the core native configure has already succeeded. (audit finding flutter-1)
+- Raised the iOS deployment target to `15.1` (from `15.0`).
+- Updated native SDK dependencies to iOS `AppActorPlugin 0.1.10` and Android `appactor-plugin 2.3.9`, delivering the iOS/Android audit fixes (ios-2/3/16/17/19, android-3/4/6/10/19) to Flutter consumers.
+
 ## 0.0.17
 
 - Updated native SDK dependencies to Android `2.3.8` and iOS `0.1.9` for Apple renewal coalescing cleanup hardening and current Android publication metadata.
