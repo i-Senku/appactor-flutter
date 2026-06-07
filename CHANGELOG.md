@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.19
+
+- Updated the Android native dependency to `com.appactor:appactor-plugin:2.3.10` (AppActorPaymentProcessor god-class decomposition; behavior-preserving, public API unchanged). iOS native dependency stays at `AppActorPlugin 0.1.10`.
+
 ## 0.0.18
 
 - **Breaking:** removed `AppActorPackage.toPurchaseParams()` and its deprecated `toJson()` alias. The purchase wire payload is built from `package_id` (plus optional `offering_id` / `old_purchase_token` / `replacement_mode` / `quantity` / `placement`); the native SDK resolves `product_id` / `store` / `base_plan_id` / `offer_id` server-side. (audit finding flutter-9)

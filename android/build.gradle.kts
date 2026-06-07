@@ -1,5 +1,5 @@
 group = "com.appactor.appactor_flutter"
-version = "0.0.18"
+version = "0.0.19"
 
 buildscript {
     val kotlinVersion = "2.2.20"
@@ -71,7 +71,7 @@ android {
 }
 
 dependencies {
-    implementation("com.appactor:appactor-plugin:2.3.9")
+    implementation("com.appactor:appactor-plugin:2.3.10")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
     testImplementation("org.mockito:mockito-core:5.0.0")
