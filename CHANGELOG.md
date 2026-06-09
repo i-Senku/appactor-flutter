@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.20
+
+- Updated native dependencies to carry the audit-revision fixes: iOS `AppActorPlugin 0.1.11` (flutter-6 non-subscription `original_transaction_identifier`; ios-7 StoreKit product-cache TTL) and Android `com.appactor:appactor-plugin:2.3.11` (android-7 receipt-queue quarantine; android-12 bridge threading; android-25 date dedup).
+
 ## 0.0.19
 
 - Updated the Android native dependency to `com.appactor:appactor-plugin:2.3.10` (AppActorPaymentProcessor god-class decomposition; behavior-preserving, public API unchanged). iOS native dependency stays at `AppActorPlugin 0.1.10`.
