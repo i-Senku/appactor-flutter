@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.21
+
+- Updated native dependencies to carry the cold-start improvements: iOS `AppActorPlugin 0.1.12` and Android `com.appactor:appactor-plugin:2.3.12` (cache-first/offline entitlement seeding at launch; skipped redundant device-attribute sync).
+
 ## 0.0.20
 
 - Updated native dependencies to carry the audit-revision fixes: iOS `AppActorPlugin 0.1.11` (flutter-6 non-subscription `original_transaction_identifier`; ios-7 StoreKit product-cache TTL) and Android `com.appactor:appactor-plugin:2.3.11` (android-7 receipt-queue quarantine; android-12 bridge threading; android-25 date dedup).
