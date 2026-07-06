@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.22
+
+- Updated the Android native dependency to `com.appactor:appactor-plugin:2.3.13`: a Google Play subscription that names a specific offer (e.g. a free trial) now falls back to the base plan when Play omits that offer for a returning / trial-ineligible user, so the user is charged the standard price instead of being unable to subscribe. iOS is unaffected.
+
 ## 0.0.21
 
 - Updated native dependencies to carry the cold-start improvements: iOS `AppActorPlugin 0.1.12` and Android `com.appactor:appactor-plugin:2.3.12` (cache-first/offline entitlement seeding at launch; skipped redundant device-attribute sync).
