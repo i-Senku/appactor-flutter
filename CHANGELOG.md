@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.23
+
+- Updated the Android native dependency to `com.appactor:appactor-plugin:2.3.14`: Google Play subscription purchases that do not name an explicit offer now auto-apply the best eligible offer Play returns for the base plan (longest free trial, else cheapest introductory price, else the base plan) — matching RevenueCat / Adapty. The native SDK also now exposes the resolved offer's pricing phases so trial/intro pricing can be surfaced. iOS is unaffected.
+
 ## 0.0.22
 
 - Updated the Android native dependency to `com.appactor:appactor-plugin:2.3.13`: a Google Play subscription that names a specific offer (e.g. a free trial) now falls back to the base plan when Play omits that offer for a returning / trial-ineligible user, so the user is charged the standard price instead of being unable to subscribe. iOS is unaffected.
