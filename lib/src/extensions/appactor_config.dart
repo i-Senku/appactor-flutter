@@ -21,6 +21,27 @@ extension AppActorConfig on AppActor {
     return AppActorExperimentAssignment.fromJson(result);
   }
 
+  /// Resolves the user's standing in an experiment.
+  ///
+  /// Never `null`: when the user is not in the experiment the result reports
+  /// `isEnrolled == false`, `variantKey == null`, and every typed getter
+  /// returns its default. Same caching and errors as [getExperimentAssignment].
+  ///
+  /// ```dart
+  /// final paywall = await AppActor.instance.getExperiment('paywall_test');
+  /// if (paywall.isVariant('annual_first')) showAnnualFirst();
+  ///
+  /// final showOnboarding = (await AppActor.instance.getExperiment('has_onboard'))
+  ///     .boolValue(defaultValue: true);
+  /// final title = (await AppActor.instance.getExperiment('onboarding_flow'))['title']
+  ///     as String? ?? 'Welcome';
+  /// ```
+  Future<AppActorExperiment> getExperiment(String experimentKey) async =>
+      AppActorExperiment(
+        experimentKey: experimentKey,
+        assignment: await getExperimentAssignment(experimentKey),
+      );
+
   Future<AppActorRemoteConfigItem?> getRemoteConfig(String key) async {
     final result = await AppActorPlatform.execute(MethodNames.getRemoteConfig, {
       'key': key,

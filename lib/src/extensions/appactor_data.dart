@@ -36,6 +36,15 @@ extension AppActorData on AppActor {
     return AppActorOfferings.fromJson(result);
   }
 
+  /// Fetches offerings (see [getOfferings]) and returns the one with the given
+  /// [AppActorOffering.offeringKey], or `null` if the app has no such offering.
+  ///
+  /// ```dart
+  /// final onboarding = await AppActor.instance.getOffering('onboarding');
+  /// ```
+  Future<AppActorOffering?> getOffering(String offeringKey) async =>
+      (await getOfferings()).getOffering(offeringKey);
+
   Future<Set<String>> activeEntitlementKeysOffline() async {
     final result = await AppActorPlatform.execute(
       MethodNames.activeEntitlementsOffline,
