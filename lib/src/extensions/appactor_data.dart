@@ -37,30 +37,34 @@ extension AppActorData on AppActor {
   }
 
   Future<Set<String>> activeEntitlementKeysOffline() async {
-    final result =
-        await AppActorPlatform.execute(MethodNames.activeEntitlementsOffline);
+    final result = await AppActorPlatform.execute(
+      MethodNames.activeEntitlementsOffline,
+    );
     final list = result['keys'];
     if (list is List) return Set<String>.from(list);
     return const {};
   }
 
   Future<AppActorOfferings?> getCachedOfferings() async {
-    final result =
-        await AppActorPlatform.execute(MethodNames.getCachedOfferings);
+    final result = await AppActorPlatform.execute(
+      MethodNames.getCachedOfferings,
+    );
     if (result['value'] == null && !result.containsKey('current')) return null;
     return AppActorOfferings.fromJson(result);
   }
 
   Future<AppActorRemoteConfigs?> getCachedRemoteConfigs() async {
-    final result =
-        await AppActorPlatform.execute(MethodNames.getCachedRemoteConfigs);
+    final result = await AppActorPlatform.execute(
+      MethodNames.getCachedRemoteConfigs,
+    );
     if (result['value'] == null && !result.containsKey('items')) return null;
     return AppActorRemoteConfigs.fromJson(result);
   }
 
   Future<AppActorCustomerInfo> getCachedCustomerInfo() async {
-    final result =
-        await AppActorPlatform.execute(MethodNames.getCachedCustomerInfo);
+    final result = await AppActorPlatform.execute(
+      MethodNames.getCachedCustomerInfo,
+    );
     return AppActorCustomerInfo.fromJson(result);
   }
 
@@ -68,8 +72,7 @@ extension AppActorData on AppActor {
   /// Android only — always returns `true` on iOS.
   Future<bool> canMakePurchases() async {
     if (!Platform.isAndroid) return true;
-    final result =
-        await AppActorPlatform.execute(MethodNames.canMakePurchases);
+    final result = await AppActorPlatform.execute(MethodNames.canMakePurchases);
     return result['value'] == true;
   }
 
@@ -86,8 +89,9 @@ extension AppActorData on AppActor {
   /// Android only — returns an empty set on iOS.
   Future<Set<AppActorStoreCapability>> getStoreCapabilities() async {
     if (!Platform.isAndroid) return const {};
-    final result =
-        await AppActorPlatform.execute(MethodNames.getStoreCapabilities);
+    final result = await AppActorPlatform.execute(
+      MethodNames.getStoreCapabilities,
+    );
     final list = result['value'];
     if (list is List) {
       return list

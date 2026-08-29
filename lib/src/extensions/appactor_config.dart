@@ -13,19 +13,18 @@ extension AppActorConfig on AppActor {
   Future<AppActorExperimentAssignment?> getExperimentAssignment(
     String experimentKey,
   ) async {
-    final result =
-        await AppActorPlatform.execute(MethodNames.getExperimentAssignment, {
-      'experiment_key': experimentKey,
-    });
+    final result = await AppActorPlatform.execute(
+      MethodNames.getExperimentAssignment,
+      {'experiment_key': experimentKey},
+    );
     if (result.isEmpty || result['experiment_key'] == null) return null;
     return AppActorExperimentAssignment.fromJson(result);
   }
 
   Future<AppActorRemoteConfigItem?> getRemoteConfig(String key) async {
-    final result = await AppActorPlatform.execute(
-      MethodNames.getRemoteConfig,
-      {'key': key},
-    );
+    final result = await AppActorPlatform.execute(MethodNames.getRemoteConfig, {
+      'key': key,
+    });
     if (result['value'] == null && !result.containsKey('key')) return null;
     return AppActorRemoteConfigItem.fromJson(result);
   }

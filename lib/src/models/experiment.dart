@@ -31,7 +31,8 @@ class AppActorExperimentAssignment {
       variantKey: json['variant_key'] as String? ?? '',
       payload: json['payload'],
       valueType: AppActorConfigValueType.fromString(
-          json['value_type'] as String? ?? 'string'),
+        json['value_type'] as String? ?? 'string',
+      ),
       assignedAt: json['assigned_at'] as String? ?? '',
     );
   }
@@ -55,6 +56,13 @@ class AppActorExperimentAssignment {
           assignedAt == other.assignedAt;
 
   @override
-  int get hashCode => Object.hash(experimentId, experimentKey, variantId,
-      variantKey, jsonValueHash(payload), valueType, assignedAt);
+  int get hashCode => Object.hash(
+    experimentId,
+    experimentKey,
+    variantId,
+    variantKey,
+    jsonValueHash(payload),
+    valueType,
+    assignedAt,
+  );
 }
